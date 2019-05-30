@@ -5,13 +5,15 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { Action } from 'vuex-class';
+import { Action, Getter } from 'vuex-class';
 import { BulletActions } from '../store/MyBullet';
+import { NormalItem } from './enemy/modal';
 
 @Component
 export default class MyBullet extends Vue {
   @Action(BulletActions.UPDATE_BULLET) public updateMyBullets!: any;
   @Action(BulletActions.DESTROY_BULLET) public destroyMyBullet!: any;
+  // @Getter('GetNormals') GetNormals: NormalItem[];
   @Prop(Boolean) private play!: boolean;
   @Prop(Number) private hash!: number;
   @Prop(Number) private top!: number;
@@ -27,27 +29,33 @@ export default class MyBullet extends Vue {
   private moveTimer: any = null;
   private move() {
     if (this.myTop <= -47) {
-      clearInterval(this.moveTimer)
-      this.moveTimer = null;
-      this.$emit('destroyMyBullet', this.hash);
-      this.destroyMyBullet({
-        hash: this.hash,
-        top_: this.myTop,
-        left_: this.myLeft,
-      });
+      this.destroy();
       return;
     }
     this.myTop = this.myTop - this.speed;
+    const normals = this.$store.getters.GetNormals;
+    normals.forEach((item: any) => {
+      if (this.myLeft <= item.left + 80 && this.myLeft >= item.top - 21) {
+        if (this.myTop <= item.top + 80 && this.myTop >= item.top - 47) {
+          this.destroy();
+        }
+      }
+    });
     this.updateMyBullets({
       hash: this.hash,
-      top_: this.myTop,
-      left_: this.myLeft,
+      top: this.myTop,
+      left: this.myLeft,
     });
   }
   private destroy() {
-    if (this.myTop <= 0) {
-      this.state = false;
-    }
+    clearInterval(this.moveTimer);
+    this.moveTimer = null;
+    this.$emit('destroyMyBullet', this.hash);
+    this.destroyMyBullet({
+      hash: this.hash,
+      top: this.myTop,
+      left: this.myLeft,
+    });
   }
   private mounted() {
     const self = this;

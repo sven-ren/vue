@@ -2,7 +2,7 @@ import { BulletItem } from '../components/modal';
 import { RootState } from '../store';
 import { Module } from 'vuex';
 
-export interface MyBulletState {
+export interface BulletState {
     bullets: BulletItem[];
 }
 export const BulletMutations = {
@@ -15,7 +15,7 @@ export const BulletActions = {
     UPDATE_BULLET: 'UPDATE_BULLET',
     DESTROY_BULLET: 'DESTROY_BULLET',
 };
-const MyBulletState: Module<MyBulletState, RootState> = {
+const MyBulletState: Module<BulletState, RootState> = {
     state: {
         bullets: [],
     },
@@ -26,8 +26,8 @@ const MyBulletState: Module<MyBulletState, RootState> = {
         [BulletMutations.UPDATE_BULLET](state, payload: BulletItem) {
             state.bullets.forEach((item: BulletItem) => {
                 if (item.hash === payload.hash) {
-                    item.top_ = payload.top_;
-                    item.left_ = payload.left_;
+                    item.top = payload.top;
+                    item.left = payload.left;
                 }
             });
         },
@@ -46,6 +46,11 @@ const MyBulletState: Module<MyBulletState, RootState> = {
         },
         [BulletActions.DESTROY_BULLET]: ({ commit }, payload: BulletItem) => {
             commit('DESTROY_BULLET', payload);
+        },
+    },
+    getters: {
+        getMyBullets: (state) => {
+            return state.bullets;
         },
     },
 };

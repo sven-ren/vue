@@ -2,7 +2,7 @@
   <div class="player_content">
     <div class='myPlane' :style="{left:left+'px',top:top+'px'}"></div>
     <template v-for='item in bullets'>
-      <MyBullet :ref="'myBullet_'+item.hash" :hash='item.hash' :key='item.hash' :top='item.top_' :left='item.left_' :planeWidth='width' :planeHeight='height' @destroyMyBullet='destroyMyBullet'/>
+      <MyBullet :ref="'myBullet_'+item.hash" :hash='item.hash' :key='item.hash' :top='item.top' :left='item.left' :planeWidth='width' :planeHeight='height' @destroyMyBullet='destroyMyBullet'/>
     </template>
   </div>
 </template>
@@ -73,8 +73,8 @@ export default class MyPlane extends Vue {
     if (this.flag4) {
       const item = {
         hash: Math.random(),
-        top_: this.top,
-        left_: this.left,
+        top: this.top,
+        left: this.left,
       };
       this.bullets.push(item);
       this.addMyBullets(item);

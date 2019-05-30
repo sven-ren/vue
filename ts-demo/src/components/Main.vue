@@ -18,6 +18,8 @@ import MediaSource from '@/components/MediaSource.vue';
 import Options from '@/components/Options.vue';
 import MyPlane from '@/components/MyPlane.vue';
 import Normal from '@/components/enemy/Normal.vue';
+import { Action } from 'vuex-class';
+import { NormalActions } from '../store/Normal';
 
 @Component({
   components: {
@@ -28,6 +30,7 @@ import Normal from '@/components/enemy/Normal.vue';
   },
 })
 export default class Main extends Vue {
+  @Action(NormalActions.ADD_NORMAL) public addNormal!: any;
   public commonData = {
     bgWidth: 440, // 背景宽度
     bgHeight: 660, // 背景高度
@@ -52,11 +55,14 @@ export default class Main extends Vue {
     this.timer = setInterval(() => {
       const imgIndex = this.normalImgs[Math.floor(Math.random() * this.normalImgs.length)];
       const hash = Math.random();
-      this.normalArray.push({
+      const item = {
         imgIndex,
         hash,
         left: Math.floor(Math.random() * this.commonData.bgWidth),
-      });
+        top: -85,
+      };
+      this.normalArray.push(item);
+      this.addNormal(item);
     }, 1000);
     this.play = true;
     this.commonData.showOptions = false;

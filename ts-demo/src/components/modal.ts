@@ -6,8 +6,8 @@ export interface NormalItem {
 }
 export interface BulletItem {
   hash: number;
-  top_: number;
-  left_: number;
+  top: number;
+  left: number;
 }
 
 export default {

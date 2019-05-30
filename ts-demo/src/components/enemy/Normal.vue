@@ -6,6 +6,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Watch, Prop } from 'vue-property-decorator';
+import { Action } from 'vuex-class';
+import { NormalActions } from '../../store/Normal';
 
 @Component({
   props: {
@@ -15,6 +17,9 @@ import { Watch, Prop } from 'vue-property-decorator';
   },
 })
 export default class Normal extends Vue {
+  @Action(NormalActions.UPDATE_NORMAL) public update!: any;
+  @Action(NormalActions.DESTROY_NORMAL) public destroy!: any;
+  @Prop(String) private imgIndex!: string;
   @Prop(Number) private left!: number;
   @Prop(Number) private hash!: number;
   private timer: any = null;
@@ -28,17 +33,40 @@ export default class Normal extends Vue {
   private self = this;
   private move() {
     if (this.top >= 660 ) {
-      clearInterval(this.timer);
-      this.timer = null;
-      this.$emit('destroyNormal', this.hash);
+      this.destroySelf();
       return;
     }
     this.top = this.top + this.speed;
+    const Mybullets = this.$store.getters.getMyBullets;
+    Mybullets.forEach((item: any) => {
+      if (item.left <= this.left + 80 && item.top >= this.top - 21) {
+        if (item.top <= this.top + 80 && item.top >= this.top - 47) {
+          this.destroySelf();
+        }
+      }
+    });
+    this.update({
+        imgIndex: this.imgIndex,
+        hash: this.hash,
+        left: this.left,
+        top: this.top,
+      });
   }
   private start() {
     this.timer = setInterval(() => {
       this.move();
     }, 0);
+  }
+  private destroySelf() {
+    clearInterval(this.timer);
+    this.timer = null;
+    this.$emit('destroyNormal', this.hash);
+    this.destroy({
+      imgIndex: this.imgIndex,
+      hash: this.hash,
+      left: this.left,
+      top: this.top,
+    });
   }
   private pause() {
     clearInterval(this.timer);
