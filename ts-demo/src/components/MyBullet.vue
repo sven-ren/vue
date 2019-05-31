@@ -1,6 +1,6 @@
 <template>
     <div class='myBullet' :style="{left:(data.left+(planeWidth/2)-(data.width/2))+'px',top:(data.top - data.height)+'px'}">
-      <!-- <audio :src="'./material/media/planeshoot0.mp3'" autoplay></audio> -->
+      <audio :src="'./material/media/planeshoot0.mp3'" autoplay></audio>
     </div>
 </template>
 

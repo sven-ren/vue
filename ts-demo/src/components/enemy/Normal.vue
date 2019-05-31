@@ -1,6 +1,6 @@
 <template>
     <div :class="data.state ? 'enemy enemy_normal_'+img : 'enemy normal_enemy_boom'" :style="{left:data.left+'px',top:data.top+'px'}">
-      <audio :key="data.state ? data.hash+'muted' : data.hash+'unmuted'" :src="!data.state ? './material/media/boommusic3.mp3' : ''" autoplay></audio>
+      <!-- <audio :key="data.state ? data.hash+'muted' : data.hash+'unmuted'" :src="!data.state ? './material/media/boommusic3.mp3' : ''" autoplay></audio> -->
     </div>
 </template>
 

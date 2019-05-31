@@ -31,7 +31,14 @@ export default new Vuex.Store<RootState>({
             if (itm.top <= item.top + item.height && itm.top >= item.top - itm.height) {
               item.state = false;
               itm.state = false;
-              window.console.log(item, itm);
+              const app = document.getElementById('app') as HTMLDivElement;
+              const audio = document.createElement('audio');
+              audio.src = './material/media/boommusic3.mp3';
+              audio.autoplay = true;
+              audio.addEventListener('ended', () => {
+                app.removeChild(audio);
+              });
+              app.appendChild(audio);
             }
           }
         });
