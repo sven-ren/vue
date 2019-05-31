@@ -5,7 +5,7 @@
     <audio class="pre_load_music" preload="auto" src="../assets/material/media/blast0.mp3"></audio>
     <audio class="pre_load_music" preload="auto" src="../assets/material/media/planeshoot0.mp3"></audio>
     <audio class="pre_load_music" preload="auto" src="../assets/material/media/showbomb.mp3"></audio>
-    <audio class="pre_load_music" preload="auto" src="../assets/material/media/touch.mp3"></audio>
+    <audio id='touch' class="pre_load_music" preload="auto" src="../assets/material/media/touch.mp3"></audio>
   </div>
 </template>
 

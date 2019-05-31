@@ -1,8 +1,8 @@
 <template>
   <div class="player_content">
     <div class='myPlane' :style="{left:left+'px',top:top+'px'}"></div>
-    <template v-for='item in bullets'>
-      <MyBullet :ref="'myBullet_'+item.hash" :hash='item.hash' :key='item.hash' :top='item.top' :left='item.left' :planeWidth='width' :planeHeight='height' @destroyMyBullet='destroyMyBullet'/>
+    <template v-for='item in MyBulletState.bullets'>
+      <MyBullet :data='item' :key='item.hash' :planeWidth='width' :planeHeight='height'/>
     </template>
   </div>
 </template>
@@ -13,7 +13,7 @@ import Component from 'vue-class-component';
 import { Watch } from 'vue-property-decorator';
 import MyBullet from '@/components/MyBullet.vue';
 import { BulletItem } from './modal';
-import { Getter, Action } from 'vuex-class';
+import { State, Action } from 'vuex-class';
 import { BulletActions } from '../store/MyBullet';
 
 @Component({
@@ -28,6 +28,7 @@ import { BulletActions } from '../store/MyBullet';
 })
 export default class MyPlane extends Vue {
   @Action(BulletActions.ADD_BULLET) public addMyBullets!: any;
+  @State('MyBulletState') public MyBulletState!: any;
   private flag: boolean = false;
   private flag1: boolean = false;
   private flag2: boolean = false;
@@ -40,8 +41,10 @@ export default class MyPlane extends Vue {
   private height = 66; // 飞机高度
   private left = 180; // 飞机初始化时的x轴距离
   private top = 520; // 飞机距离顶部的距离
-  private speed = 1; // 飞机速度
+  private speed = 1.5; // 飞机速度
   private bullets: BulletItem[] = []; // 子弹数组
+  private bulletWidth = 21; // 子弹宽度
+  private bulletHeight = 47; // 子弹高度
   private myThis: any = this;
   private move() {
     if (this.flag) {
@@ -75,8 +78,12 @@ export default class MyPlane extends Vue {
         hash: Math.random(),
         top: this.top,
         left: this.left,
+        width: this.bulletWidth,
+        height: this.bulletHeight,
+        state: true,
+        speed: 2,
       };
-      this.bullets.push(item);
+      // this.bullets.push(item);
       this.addMyBullets(item);
     }
   }

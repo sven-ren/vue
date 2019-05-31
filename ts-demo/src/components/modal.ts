@@ -1,13 +1,12 @@
-const STORAGE_KEY = 'VUE-TYPESCRIPT-TODOS';
-export interface NormalItem {
-  imgIndex: number;
-  hash: number;
-  left: number;
-}
+
 export interface BulletItem {
   hash: number;
   top: number;
   left: number;
+  width: number;
+  height: number;
+  state: boolean;
+  speed: number;
 }
 
 export default {

@@ -1,8 +1,5 @@
 <template>
   <div id="app">
-    {{this.$store.state.MyBulletState.bullets.map((item)=>{
-      return item.top
-    })+''}}
     <!-- <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>

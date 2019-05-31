@@ -1,13 +1,14 @@
 <template>
   <div class="content">
-    <MediaSource/>
+    <!-- <MediaSource/> -->
     <Options v-bind:message='msg' v-bind:start='start' :common='commonData'/>
-    <template v-for="item in normalArray">
-      <Normal :ref="'Normal_'+item.hash" :hash='item.hash' :imgIndex="item.imgIndex" :key="item.hash" :common='commonData' :flag='flag4' :left='item.left' @destroyNormal='destroyNormal'/>
+    <template v-for="item in NormalState.normals">
+      <Normal :ref="'Normal_'+item.hash" :data='item' :hash='item.hash' :img="item.img" :key="item.hash" :common='commonData' :flag='flag4' :left='item.left' @destroyNormal='destroyNormal'/>
     </template>
     <template>
       <MyPlane :play='play' :common='commonData'/>
     </template>
+    <audio id='touch' :ref="'touch'" class="pre_load_music" :src='bgMusic' autoplay loop></audio>
   </div>
 </template>
 
@@ -18,7 +19,8 @@ import MediaSource from '@/components/MediaSource.vue';
 import Options from '@/components/Options.vue';
 import MyPlane from '@/components/MyPlane.vue';
 import Normal from '@/components/enemy/Normal.vue';
-import { Action } from 'vuex-class';
+import { State, Action, Getter } from 'vuex-class';
+import { Actions } from '../store';
 import { NormalActions } from '../store/Normal';
 
 @Component({
@@ -30,13 +32,18 @@ import { NormalActions } from '../store/Normal';
   },
 })
 export default class Main extends Vue {
+  @Action(Actions.BULLET_TOUCH_NORMAL) public bulletTouchNormal!: any;
+  @Action(Actions.MYBULLET_MINITOR) public myBulletMinitor!: any;
+  @Action(Actions.NORMAL_MINITOR) public normalMinitor!: any;
   @Action(NormalActions.ADD_NORMAL) public addNormal!: any;
-  public commonData = {
+  @State('NormalState') public NormalState!: any;
+  private commonData = {
     bgWidth: 440, // 背景宽度
     bgHeight: 660, // 背景高度
     showOptions: true, // 开始、暂停、继续、退出等操作展示
     flag: false,
   };
+  private bgMusic: string = '';
   private msg: string = 'Welcome to Your Vue.js App';
   private play: boolean = false; // 开始游戏变量
   private flag: boolean = false;
@@ -50,20 +57,31 @@ export default class Main extends Vue {
   private normalArray: object[] = [];
   private count: number = 0;
   private timer: any = null;
+  private timer1: any = null;
   private myThis: any = this;
   private start() {
+    this.bgMusic = './material/media/wind.ogg';
     this.timer = setInterval(() => {
       const imgIndex = this.normalImgs[Math.floor(Math.random() * this.normalImgs.length)];
       const hash = Math.random();
       const item = {
-        imgIndex,
+        img: imgIndex,
         hash,
-        left: Math.floor(Math.random() * this.commonData.bgWidth),
+        left: Math.floor(Math.random() * (this.commonData.bgWidth - 73)),
         top: -85,
+        width: 73,
+        height: 80,
+        state: true,
+        deadTime: 10,
+        speed: 1,
       };
-      this.normalArray.push(item);
       this.addNormal(item);
-    }, 1000);
+    }, 5000);
+    this.timer1 = setInterval(() => {
+      this.bulletTouchNormal();
+      this.myBulletMinitor();
+      this.normalMinitor();
+    }, 0);
     this.play = true;
     this.commonData.showOptions = false;
   }
