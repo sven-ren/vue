@@ -56,18 +56,18 @@ export default new Vuex.Store<RootState>({
     },
     [Mutations.NORMAL_MINITOR]: (state) => {
       const Normals = state.NormalState.normals;
-      Normals.forEach((current, index) => {
-        if (current.state) {
-          if (current.top >= 660) {
+      Normals.forEach((item, index) => {
+        if (item.state) {
+          if (item.top >= 660) {
             state.NormalState.normals.splice(index, 1);
           } else {
-            current.top = current.top + current.speed;
+            item.top = item.top + item.speed;
           }
         } else {
-          if (current.deadTime <= 0) {
+          if (item.deadTime <= 0) {
             state.NormalState.normals.splice(index, 1);
           } else {
-            current.deadTime--;
+            item.deadTime--;
           }
         }
       });
