@@ -25,6 +25,9 @@ const mutations: MutationTree<StateNormal> = {
         }
       });
     },
+    [NormalActions.NORMAL_CLEAR](state, payload: NormalItem) {
+      state.normals = [];
+    },
 };
 
 export { mutations };

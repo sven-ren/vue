@@ -1,11 +1,11 @@
 <template>
   <div class="options_content">
-    <div id="pausedBg" :style="{display:$props.common.showOptions ? '' : 'none'}"></div>
-    <div id="continue" onclick="continueGame()" :style="{display:$props.common.showOptions ? '' : 'none'}">继续游戏</div>
+    <div id="pausedBg" :style="{display:$props.common.pause ? 'block' : 'none'}"></div>
+    <div id="continue" @click="Continue" :style="{display:$props.common.pause ? 'block' : 'none'}">继续游戏</div>
     <div id="start" @click="startGame" :style="{display:$props.common.showOptions ? '' : 'none'}">开始游戏</div>
-    <div id="new" onclick="newGame()" :style="{display:$props.common.showOptions ? '' : 'none'}">新的游戏</div>
+    <div id="new" @click="newGame" :style="{display:$props.common.pause ? 'block' : 'none'}">新的游戏</div>
     <div id="exit" :style="{display:$props.common.showOptions ? '' : 'none'}">退出游戏</div>
-    <div id="pause" :style="{display:$props.common.showOptions ? 'none' : ''}">||</div>
+    <div id="pause" :style="{display:$props.common.showOptions ? 'none' : 'block'}" @click="paused">||</div>
     <div id="instruction" :style="{display:$props.common.showOptions ? '' : 'none'}">操作说明:上下左右键控制移动，z键开火</div>
   </div>
 </template>
@@ -17,12 +17,24 @@ import Component from 'vue-class-component';
 @Component({
   props: {
     start: Function,
+    pause: Function,
+    NewGame: Function,
+    continueGame: Function,
     common: Object,
   },
 })
 export default class Options extends Vue {
   private startGame() {
     this.$props.start();
+  }
+  private paused() {
+    this.$props.pause();
+  }
+  private Continue() {
+    this.$props.continueGame();
+  }
+  private newGame() {
+    this.$props.NewGame();
   }
 }
 </script>

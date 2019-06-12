@@ -2,7 +2,7 @@
   <div class="player_content">
     <div class='myPlane' :style="{left:left+'px',top:top+'px'}"></div>
     <template v-for='item in MyBulletState.bullets'>
-      <MyBullet :data='item' :key='item.hash' :planeWidth='width' :planeHeight='height'/>
+      <MyBullet :data='item' :key='item ? item.hash : Math.random()' :planeWidth='width' :planeHeight='height'/>
     </template>
   </div>
 </template>
@@ -14,20 +14,21 @@ import { Watch } from 'vue-property-decorator';
 import MyBullet from '@/components/MyBullet.vue';
 import { BulletItem } from './modal';
 import { State, Action } from 'vuex-class';
-import { BulletActions } from '../store/MyBullet';
+import { MyBulletActions } from '../store/MyBullet/index';
 
 @Component({
   components: {
     MyBullet,
   },
   props: {
-    level: String,
+    level: Number,
     common: Object,
     play: Boolean,
+    replay: Boolean,
   },
 })
 export default class MyPlane extends Vue {
-  @Action(BulletActions.ADD_BULLET) public addMyBullets!: any;
+  @Action(MyBulletActions.ADD_BULLET) public addMyBullets!: any;
   @State('MyBulletState') public MyBulletState!: any;
   private flag: boolean = false;
   private flag1: boolean = false;
@@ -83,7 +84,6 @@ export default class MyPlane extends Vue {
         state: true,
         speed: 2,
       };
-      // this.bullets.push(item);
       this.addMyBullets(item);
     }
   }
@@ -94,18 +94,28 @@ export default class MyPlane extends Vue {
   }
   @Watch('play')
   private start(val: boolean, oldVal: boolean) {
-    if (val !== oldVal && val) {
-      this.moveTimer = setInterval(() => {
-        this.move();
-      }, 0);
-      this.shootTimer = setInterval(() => {
-        this.shoot();
-      }, 168);
+    if (val !== oldVal) {
+      if (val) {
+        this.moveTimer = setInterval(() => {
+          this.move();
+        }, 0);
+        this.shootTimer = setInterval(() => {
+          this.shoot();
+        }, 168);
+      } else {
+        clearInterval(this.moveTimer);
+        clearInterval(this.shootTimer);
+        this.moveTimer = null;
+        this.shootTimer = null;
+      }
     }
   }
-  private pause() {
-    clearInterval(this.moveTimer);
-    this.moveTimer = null;
+  @Watch('replay')
+  private NewGame(val: boolean, oldVal: boolean) {
+    if ((val !== oldVal) && val) {
+      this.top = 520;
+      this.left = 180;
+    }
   }
   private created() {
     const self = this;

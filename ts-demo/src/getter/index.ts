@@ -1,12 +1,12 @@
 import { GetterTree, Getter } from 'vuex';
 import { RootState } from '../store';
 
-const GetNormals: Getter<RootState, any> = (state: RootState) => {
-  return state.NormalState.normals;
+const GetState: Getter<RootState, any> = (state: RootState) => {
+  return state;
 };
 
 const getterTree: GetterTree<RootState, any> = {
-    GetNormals,
+  GetState,
 };
 
 export default getterTree;

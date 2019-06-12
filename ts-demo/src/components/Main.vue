@@ -1,11 +1,11 @@
 <template>
   <div class="content">
-    <Options v-bind:message='msg' v-bind:start='start' :common='commonData'/>
+    <Options v-bind:start='start' v-bind:pause='pause' v-bind:continueGame="continueGame" :NewGame='newGame' :replay='replay' :common='commonData'/>
     <template v-for="item in NormalState.normals">
-      <Normal :ref="'Normal_'+item.hash" :data='item' :hash='item.hash' :img="item.img" :key="item.hash" :common='commonData' :flag='flag4' :left='item.left' @destroyNormal='destroyNormal'/>
+      <Normal :ref="'Normal_'+item.hash" :data='item' :hash='item.hash' :img="item.img" :key="item.hash" :common='commonData' :flag='flag4' :left='item.left'/>
     </template>
     <template>
-      <MyPlane :play='play' :common='commonData'/>
+      <MyPlane :play='play' :common='commonData' :replay='replay'/>
     </template>
     <audio id='touch' :ref="'touch'" class="pre_load_music" :src='bgMusic' autoplay loop></audio>
   </div>
@@ -19,9 +19,9 @@ import Options from '@/components/Options.vue';
 import MyPlane from '@/components/MyPlane.vue';
 import Normal from '@/components/enemy/Normal.vue';
 import { State, Action, Getter } from 'vuex-class';
-// import { Actions } from '../store';
-// import { NormalActions } from '../store/Normal';
-import { NormalActions } from '../store/Normal/actions';
+import { Actions } from '../store/index';
+import { NormalActions } from '../store/Normal/index';
+import { MyBulletActions } from '../store/MyBullet/index';
 
 @Component({
   components: {
@@ -32,22 +32,21 @@ import { NormalActions } from '../store/Normal/actions';
   },
 })
 export default class Main extends Vue {
-  // @Action(Actions.BULLET_TOUCH_NORMAL) public bulletTouchNormal!: any;
-  // @Action(Actions.MYBULLET_MINITOR) public myBulletMinitor!: any;
-  // @Action(Actions.NORMAL_MINITOR) public normalMinitor!: any;
-  // @Action(NormalActions.ADD_NORMAL) public addNormal!: any;
+  @Action(Actions.BULLET_TOUCH_NORMAL) public bulletTouchNormal!: any;
   @Action(NormalActions.ADD_NORMAL) public addNormal!: any;
   @Action(NormalActions.NORMAL_MINITOR) public normalMinitor!: any;
+  @Action(MyBulletActions.MYBULLET_MINITOR) public MyBulletMinitor!: any;
   @State('NormalState') public NormalState!: any;
   private commonData = {
     bgWidth: 440, // 背景宽度
     bgHeight: 660, // 背景高度
     showOptions: true, // 开始、暂停、继续、退出等操作展示
+    pause: false, // 暂停
     flag: false,
   };
   private bgMusic: string = '';
-  private msg: string = 'Welcome to Your Vue.js App';
   private play: boolean = false; // 开始游戏变量
+  private replay: boolean = false; // 重新开始新游戏变量
   private flag: boolean = false;
   private flag1: boolean = false;
   private flag2: boolean = false;
@@ -80,17 +79,31 @@ export default class Main extends Vue {
       this.addNormal(item);
     }, 1000);
     this.timer1 = setInterval(() => {
-      // this.bulletTouchNormal();
-      // this.myBulletMinitor();
+      this.bulletTouchNormal();
+      this.MyBulletMinitor();
       this.normalMinitor();
     }, 0);
     this.play = true;
     this.commonData.showOptions = false;
+    this.commonData.pause = false;
   }
-  private destroyNormal(hash: number) {
-    this.normalArray = this.normalArray.filter((item: any) => {
-      return item.hash !== hash;
-    });
+  private pause() {
+    this.bgMusic = '';
+    clearInterval(this.timer);
+    clearInterval(this.timer1);
+    this.timer = null;
+    this.timer1 = null;
+    this.play = false;
+    this.commonData.showOptions = true;
+    this.commonData.pause = true;
+  }
+  private newGame() {
+    this.replay = true;
+    this.start();
+    this.replay = false;
+  }
+  private continueGame() {
+    this.start();
   }
 }
 </script>

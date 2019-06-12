@@ -1,5 +1,4 @@
 import { GetterTree, Getter } from 'vuex';
-import { RootState } from '../index';
 import { StateNormal } from './index';
 
 const GetNormals: Getter<StateNormal, any> = (state: StateNormal) => {

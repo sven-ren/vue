@@ -5,6 +5,7 @@ import { RootState } from '../index';
 export const NormalActions = {
   ADD_NORMAL: 'ADD_NORMAL',
   NORMAL_MINITOR: 'NORMAL_MINITOR',
+  NORMAL_CLEAR: 'NORMAL_CLEAR',
 };
 
 const actions: ActionTree<StateNormal, RootState> = {
@@ -13,6 +14,9 @@ const actions: ActionTree<StateNormal, RootState> = {
   },
   [NormalActions.NORMAL_MINITOR]: ({ commit }) => {
     commit(NormalActions.NORMAL_MINITOR);
+  },
+  [NormalActions.NORMAL_CLEAR]: ({ commit }) => {
+    commit(NormalActions.NORMAL_CLEAR);
   },
 };
 

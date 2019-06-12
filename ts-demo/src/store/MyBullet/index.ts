@@ -3,6 +3,7 @@ import { mutations } from './mutations';
 import { actions, MyBulletActions } from './actions';
 import { BulletItem } from '../../components/modal';
 import { Module } from 'vuex';
+import getters from './getters';
 
 export interface BulletState {
     bullets: BulletItem[];
@@ -10,7 +11,7 @@ export interface BulletState {
 
 const MyBulletState: Module<BulletState, RootState> = {
   state: { bullets: [] },
-//   getters,
+  getters,
   mutations,
   actions,
 };

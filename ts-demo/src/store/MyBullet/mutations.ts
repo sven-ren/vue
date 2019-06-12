@@ -17,6 +17,9 @@ const mutations: MutationTree<BulletState> = {
             }
         });
     },
+    [MyBulletActions.MYBULLET_CLEAR](state, payload: BulletItem) {
+        state.bullets = [];
+    },
 };
 
 export { mutations };
