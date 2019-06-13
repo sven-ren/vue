@@ -24,7 +24,7 @@ import { MyBulletActions } from '../store/MyBullet/index';
     level: Number,
     common: Object,
     play: Boolean,
-    replay: Boolean,
+    replay: Number,
   },
 })
 export default class MyPlane extends Vue {

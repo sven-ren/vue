@@ -36,6 +36,7 @@ export default class Main extends Vue {
   @Action(NormalActions.ADD_NORMAL) public addNormal!: any;
   @Action(NormalActions.NORMAL_MINITOR) public normalMinitor!: any;
   @Action(MyBulletActions.MYBULLET_MINITOR) public MyBulletMinitor!: any;
+  @Action(Actions.NEW_GAME) public clearAll!: any;
   @State('NormalState') public NormalState!: any;
   private commonData = {
     bgWidth: 440, // 背景宽度
@@ -46,7 +47,7 @@ export default class Main extends Vue {
   };
   private bgMusic: string = '';
   private play: boolean = false; // 开始游戏变量
-  private replay: boolean = false; // 重新开始新游戏变量
+  private replay: number = 0; // 重新开始新游戏变量
   private flag: boolean = false;
   private flag1: boolean = false;
   private flag2: boolean = false;
@@ -57,8 +58,8 @@ export default class Main extends Vue {
   private normalImgs: string[] = ['1', '2', '3', '4'];
   private normalArray: object[] = [];
   private count: number = 0;
-  private timer: any = null;
-  private timer1: any = null;
+  private timer: any = null; // 敌机出现定时器
+  private timer1: any = null; // 监控子弹、敌机、子弹和敌机碰撞等的定时器
   private myThis: any = this;
   private start() {
     this.bgMusic = './material/media/wind.ogg';
@@ -98,9 +99,9 @@ export default class Main extends Vue {
     this.commonData.pause = true;
   }
   private newGame() {
-    this.replay = true;
-    this.start();
-    this.replay = false;
+    this.replay = this.replay + 1; // replay变量用来初始化我的飞机
+    this.clearAll(); // 这里的action用来初始化敌机和子弹等
+    this.start(); // 重新开始
   }
   private continueGame() {
     this.start();

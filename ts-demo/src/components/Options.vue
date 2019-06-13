@@ -7,6 +7,9 @@
     <div id="exit" :style="{display:$props.common.showOptions ? '' : 'none'}">退出游戏</div>
     <div id="pause" :style="{display:$props.common.showOptions ? 'none' : 'block'}" @click="paused">||</div>
     <div id="instruction" :style="{display:$props.common.showOptions ? '' : 'none'}">操作说明:上下左右键控制移动，z键开火</div>
+    <div id='dashboard'>
+      <div id='score'>得分: 0</div>
+    </div>
   </div>
 </template>
 
@@ -144,5 +147,15 @@ export default class Options extends Vue {
   cursor: pointer;
   display: block;
   z-index: 1000;
+}
+#score {
+  width: 100px;
+  height: 30px;
+  text-align: left;
+  line-height: 30px;
+  position: absolute;
+  left:10px;
+  top:10px;
+  color:#fff;
 }
 </style>

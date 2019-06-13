@@ -11,11 +11,13 @@ export interface RootState {
 }
 export const Mutations = {
   BULLET_TOUCH_NORMAL: 'BULLET_TOUCH_NORMAL', // 判断子弹和normal类飞机的碰撞，二者碰撞后，state都变为false
+  NEW_GAME: 'NEW_GAME', // 新的游戏，初始化所有状态
   // NORMAL_MINITOR: 'NORMAL_MINITOR', // normal类飞机定时器，让normal类飞机移动的同时监控飞机状态，state变为false后，deadTime逐渐瞬减小到0，然后销毁该飞机
   // MYBULLET_MINITOR: 'MYBULLET_MINITOR', // 我的子弹定时器，让子弹移动，state为false销毁子弹
 };
 export const Actions = {
   BULLET_TOUCH_NORMAL: 'BULLET_TOUCH_NORMAL',
+  NEW_GAME: 'NEW_GAME',
   // NORMAL_MINITOR: 'NORMAL_MINITOR',
   // MYBULLET_MINITOR: 'MYBULLET_MINITOR',
 };
@@ -44,45 +46,18 @@ export default new Vuex.Store<RootState>({
         });
       });
     },
-    // [Mutations.MYBULLET_MINITOR]: (state) => {
-    //   const MyBullets = state.MyBulletState.bullets;
-    //   MyBullets.forEach((Item, Index) => {
-    //     if (Item.top <= -Item.height || !Item.state) {
-    //       state.MyBulletState.bullets.splice(Index, 1);
-    //     } else {
-    //       Item.top = Item.top - Item.speed;
-    //     }
-    //   });
-    // },
-    // [Mutations.NORMAL_MINITOR]: (state) => {
-    //   const Normals = state.NormalState.normals;
-    //   Normals.forEach((item, index) => {
-    //     if (item.state) {
-    //       if (item.top >= 660) {
-    //         state.NormalState.normals.splice(index, 1);
-    //       } else {
-    //         item.top = item.top + item.speed;
-    //       }
-    //     } else {
-    //       if (item.deadTime <= 0) {
-    //         state.NormalState.normals.splice(index, 1);
-    //       } else {
-    //         item.deadTime--;
-    //       }
-    //     }
-    //   });
-    // },
+    [Mutations.NEW_GAME]: (state) => {
+      state.NormalState.normals = [];
+      state.MyBulletState.bullets = [];
+    },
   },
   actions: {
     [Actions.BULLET_TOUCH_NORMAL]: (state) => {
       state.commit(Mutations.BULLET_TOUCH_NORMAL);
     },
-    // [Actions.MYBULLET_MINITOR]: (state) => {
-    //   state.commit(Mutations.MYBULLET_MINITOR);
-    // },
-    // [Actions.NORMAL_MINITOR]: (state) => {
-    //   state.commit(Mutations.NORMAL_MINITOR);
-    // },
+    [Actions.NEW_GAME]: (state) => {
+      state.commit(Mutations.NEW_GAME);
+    },
   },
   modules: {
     MyBulletState,
